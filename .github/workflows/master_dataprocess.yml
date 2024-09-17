@@ -35,7 +35,7 @@ jobs:
         subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B720957CAEA04D32AD4589FA45F4E5B4 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Publish Artifacts
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v3.2.0
       with:
         name: webapp
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
