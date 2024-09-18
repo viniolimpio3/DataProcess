@@ -1,60 +1,13 @@
 name: Build and deploy .NET Core application to Web App dataprocess
-on:
-  push:
-    branches:
-    - master
-env:
-  AZURE_WEBAPP_NAME: dataprocess
-  AZURE_WEBAPP_PACKAGE_PATH: .\published
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 6.0.x
-  WORKING_DIRECTORY: .
-jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    # Instalar o Node.js antes de rodar o 'dotnet publish'
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '18.20.3'  # Verifique a versão de Node.js compatível com seu projeto
-
-    - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
-    - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
-    - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-    - name: Deploy to Azure WebApp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8705F696188445A085A8B93C5604F752 }}
-        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E8A00BB6C29B4B86839668C31913F84F }}
-        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B720957CAEA04D32AD4589FA45F4E5B4 }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-    - name: Publish Artifacts
-      uses: actions/upload-artifact@v3.2.0
-      with:
-        name: webapp
-        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
 
 env:
-  AZURE_WEBAPP_NAME: exemplo-ec8-2024-01    # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: dataprocess    # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '8.x'                 # set this to the .NET Core version to use
+  DOTNET_VERSION: '6.0.x'                 # set this to the .NET Core version to use
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 permissions:
@@ -62,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -100,7 +53,7 @@ jobs:
   deploy:
     permissions:
       contents: none
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'Development'
