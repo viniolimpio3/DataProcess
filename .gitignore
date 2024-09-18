@@ -230,3 +230,6 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# WebApp package-lock.json
+ClientApp/package-lock.json
